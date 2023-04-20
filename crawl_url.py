@@ -48,7 +48,7 @@ def getProducts(browser, number_of_page):
         'link_shopee': link_list
         })
     
-    dataframe.to_csv("E:\MyDesktop\ThaiTran\Personal_Project\Project_Shopee_ETL_Visualization\Data\Test{}.csv".format(number_of_page))
+    # dataframe.to_csv("E:\MyDesktop\ThaiTran\Personal_Project\Project_Shopee_ETL_Visualization\Data\Test{}.csv".format(number_of_page))
     # print(dataframe.to_markdown)
     print("Page {}: {} rows, {} columns".format(number_of_page, dataframe.shape[0], dataframe.shape[1]))
     browser.implicitly_wait(10)
