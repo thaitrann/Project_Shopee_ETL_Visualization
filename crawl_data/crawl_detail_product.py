@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import pandas as pd
 
 #setup selenium
-link = 'https://shopee.vn/H%E1%BB%99p-%C4%90%E1%BB%B1ng-B%E1%BA%A3o-V%E1%BB%87-Chu%E1%BB%99t-Logitech-MX-Master-2S-3-3S-Lucas-V%C3%B2m-i.88679925.6548500114?sp_atk=ff96a351-f2ec-4b4b-a3ca-dcebb3f99960&xptdk=ff96a351-f2ec-4b4b-a3ca-dcebb3f99960'
+link = 'https://shopee.vn/-M%C3%A3-ELBMO2-gi%E1%BA%A3m-12-%C4%91%C6%A1n-500K-Ugreen-Chu%E1%BB%99t-kh%C3%B4ng-d%C3%A2y-ti%E1%BB%87n-d%E1%BB%A5ng-6-n%C3%BAt-im-l%E1%BA%B7ng-5-c%E1%BA%A5p-%C4%91%E1%BB%99-4000dpi-cho-for-PC-MacBook-Air-M1-iPad-Gen-9-Laptop-i.325696535.14478688162?sp_atk=610cc335-0fbb-49d1-9ff7-6587423921a7&xptdk=610cc335-0fbb-49d1-9ff7-6587423921a7'
 start_time = time()
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
@@ -30,9 +30,17 @@ total_reviews = browser.find_element(By.CSS_SELECTOR, "#main > div > div:nth-chi
     div.ndOSOO > div > div.container > div.product-briefing.flex.card.s9-a-0 > div.flex.flex-auto.RBf1cu > \
         div > div.flex.X5u-5c > div:nth-child(2) > div._1k47d8").text
 
-print(title)
-print(avg_star)
-print(total_reviews)
+total_sold = browser.find_element(By.CSS_SELECTOR, "#main > div > div:nth-child(3) > div:nth-child(1) > \
+    div.ndOSOO > div > div.container > div.product-briefing.flex.card.s9-a-0 > div.flex.flex-auto.RBf1cu > \
+        div > div.flex.X5u-5c > div.flex.jgUbWJ > div.P3CdcB").text
 
-sleep(3)
-browser.close()
+price = browser.find_element(By.CSS_SELECTOR, "#main > div > div:nth-child(3) > div:nth-child(1) > \
+    div.ndOSOO > div > div.container > div.product-briefing.flex.card.s9-a-0 > div.flex.flex-auto.RBf1cu > \
+        div > div:nth-child(3) > div > div > div:nth-child(1) > div > div > div").text
+
+insurance = browser.find_element(By.CSS_SELECTOR, "#main > div > div:nth-child(3) > div.theme--ofs > div > div > \
+    div.container > div.product-briefing.flex.card.s9-a-0 > div.flex.flex-auto.RBf1cu > div > div.h-y3ij > div > \
+        div:nth-child(3) > div > div:nth-child(1)").text
+
+print(title, avg_star, total_reviews, total_sold, price, insurance, sep="\n")
+
