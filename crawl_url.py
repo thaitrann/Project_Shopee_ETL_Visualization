@@ -33,20 +33,22 @@ def getProducts(browser, number_of_page):
     products = WebDriverWait(browser, 20).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".col-xs-2-4 a")))
     link_list = []
     name_list = []
-    quantity_sold_in_month = []
+    quantity_sold_in_month_list = []
     for product in products:
         link = product.get_attribute('href')
         name = product.find_element(By.CSS_SELECTOR, "a div div:nth-child(2) div div div").text
-        quantity = product.find_element(By.CSS_SELECTOR, "a div div:nth-child(2) div:nth-child(3) div:nth-child(2)").text
-        print(quantity)
+        quantity = product.find_element(By.CSS_SELECTOR, "a div div:nth-child(2) div:nth-child(3)").text
         name_list.append(name)
         link_list.append(link)
+        quantity_sold_in_month_list.append(quantity)
 
     dataframe = pd.DataFrame(
         {'name': name_list,
+         'quantity_sound_in_month': quantity_sold_in_month_list,
         'link_shopee': link_list
         })
-    #dataframe.to_csv("E:\MyDesktop\ThaiTran\Personal_Project\Project_Shopee_ETL_Visualization\Data\Test{}.csv".format(number_of_page))
+    
+    dataframe.to_csv("E:\MyDesktop\ThaiTran\Personal_Project\Project_Shopee_ETL_Visualization\Data\Test{}.csv".format(number_of_page))
     # print(dataframe.to_markdown)
     print("Page {}: {} rows, {} columns".format(number_of_page, dataframe.shape[0], dataframe.shape[1]))
     browser.implicitly_wait(10)
