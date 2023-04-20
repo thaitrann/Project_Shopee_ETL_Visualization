@@ -17,3 +17,22 @@ browser.set_window_position(-1000, 0)
 browser.maximize_window()
 browser.get(link)
 browser.implicitly_wait(10)
+
+title = browser.find_element(By.CSS_SELECTOR, "#main > div > div:nth-child(3) > div:nth-child(1) > \
+    div.ndOSOO > div > div.container > div.product-briefing.flex.card.s9-a-0 > \
+        div.flex.flex-auto.RBf1cu > div > div._44qnta > span").text
+
+avg_star = browser.find_element(By.CSS_SELECTOR, "#main > div > div:nth-child(3) > div:nth-child(1) > \
+    div.ndOSOO > div > div.container > div.product-briefing.flex.card.s9-a-0 > div.flex.flex-auto.RBf1cu > \
+        div > div.flex.X5u-5c > div:nth-child(1) > div._1k47d8._046PXf").text
+
+total_reviews = browser.find_element(By.CSS_SELECTOR, "#main > div > div:nth-child(3) > div:nth-child(1) > \
+    div.ndOSOO > div > div.container > div.product-briefing.flex.card.s9-a-0 > div.flex.flex-auto.RBf1cu > \
+        div > div.flex.X5u-5c > div:nth-child(2) > div._1k47d8").text
+
+print(title)
+print(avg_star)
+print(total_reviews)
+
+sleep(3)
+browser.close()
