@@ -38,9 +38,9 @@ price = browser.find_element(By.CSS_SELECTOR, "#main > div > div:nth-child(3) > 
     div.ndOSOO > div > div.container > div.product-briefing.flex.card.s9-a-0 > div.flex.flex-auto.RBf1cu > \
         div > div:nth-child(3) > div > div > div:nth-child(1) > div > div > div").text
 
-insurance = browser.find_element(By.CSS_SELECTOR, "#main > div > div:nth-child(3) > div.theme--ofs > div > div > \
-    div.container > div.product-briefing.flex.card.s9-a-0 > div.flex.flex-auto.RBf1cu > div > div.h-y3ij > div > \
-        div:nth-child(3) > div > div:nth-child(1)").text
+free_ship = browser.find_element(By.CSS_SELECTOR, "#main > div > div:nth-child(3) > div:nth-child(1) > div > \
+    div > div.container > div.product-briefing.flex.card.s9-a-0 > div.flex.flex-auto.RBf1cu > div > \
+        div.h-y3ij > div > div.flex.rY0UiC.lml8Go > div > div.mHANnI > div.WZTmVh > div").text
 
-print(title, avg_star, total_reviews, total_sold, price, insurance, sep="\n")
+print(title, avg_star, total_reviews, total_sold, price, free_ship, sep="\n")
 
