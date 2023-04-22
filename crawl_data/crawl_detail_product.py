@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import pandas as pd
 
 #setup selenium
-link = 'https://shopee.vn/Chu%E1%BB%99t-kh%C3%B4ng-d%C3%A2y-Bluetooth-Logitech-MX-Master-3s-%E2%80%93-Y%C3%AAn-t%C4%A9nh-8K-DPI-Cu%E1%BB%99n-si%C3%AAu-nhanh-s%E1%BA%A1c-USB-C-Win-Mac-i.52679373.21616681122?sp_atk=2f5d4ef7-8a48-4747-be23-728698ab8fa0&xptdk=2f5d4ef7-8a48-4747-be23-728698ab8fa0'
+link = 'https://shopee.vn/Chu%E1%BB%99t-kh%C3%B4ng-d%C3%A2y-Logitech-MX-MASTER-3S-H%C3%A0ng-ch%C3%ADnh-h%C3%A3ng-i.311276229.19766393727?sp_atk=c5941fe2-93ef-45ea-98ed-65a938a8961f&xptdk=c5941fe2-93ef-45ea-98ed-65a938a8961f'
 start_time = time()
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
@@ -38,22 +38,29 @@ price = browser.find_element(By.CSS_SELECTOR, "#main > div > div:nth-child(3) > 
     div.ndOSOO > div > div.container > div.product-briefing.flex.card.s9-a-0 > div.flex.flex-auto.RBf1cu > \
         div > div:nth-child(3) > div > div > div:nth-child(1) > div > div > div").text
 
-free_ship = browser.find_element(By.CSS_SELECTOR, "#main > div > div:nth-child(3) > div:nth-child(1) > div > \
-    div > div.container > div.product-briefing.flex.card.s9-a-0 > div.flex.flex-auto.RBf1cu > div > \
-        div.h-y3ij > div > div.flex.rY0UiC.lml8Go > div > div.mHANnI > div.WZTmVh > div").text
-
 supplement_list = browser.find_element(By.CLASS_NAME, "h-y3ij").text.split("\n")
-
-print(supplement_list)
+free_ship = "Miễn phí vận chuyển"
 insurance = "Bảo hiểm Thiết bị điện tử"
 
-if insurance in supplement_list:
-    print(True)
-else:
-    print(False)
+# print(title, avg_star, total_reviews, total_sold, price, sep="\n")
+# print(supplement_list)
 
-# print(title, avg_star, total_reviews, total_sold, price, free_ship, sep="\n")
-sleep(2)
+#get price variation
+browser.implicitly_wait(10)
+price_variation = browser.find_elements(By.CLASS_NAME, "product-variation")
+for p in price_variation:
+    p.click()
+    sleep(0.5)
+    name_variation = p.text
+    price = browser.find_element(By.CSS_SELECTOR, "#main > div > div:nth-child(3) > div:nth-child(1) > \
+        div.ndOSOO > div > div.container > div.product-briefing.flex.card.s9-a-0 > div.flex.flex-auto.RBf1cu > \
+            div > div:nth-child(3) > div > div > div:nth-child(1) > div > div > div").text
+    if p.get_attribute("aria-disabled") == "true":
+        print(name_variation, "Out Of Stock","---" , sep="\n")
+    else:
+        print(name_variation, price,"---" , sep="\n")
+
+sleep(1)
 browser.close()
 
 
