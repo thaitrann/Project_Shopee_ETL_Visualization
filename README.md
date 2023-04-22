@@ -6,4 +6,5 @@
 + Data cleaning: Python
 + Store cleaned data: Hadoop + Hive
 + Data visualization: Power BI
-##Mind map <p align = 'center'><img src="Mindmap/Shopee Project.png" alt="Italian Trulli"></p>
+## Mind map:
+<p align = 'center'><img src="Mindmap/Shopee Project.png" alt="Italian Trulli"></p>
