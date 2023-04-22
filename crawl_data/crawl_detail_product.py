@@ -42,11 +42,6 @@ free_ship = browser.find_element(By.CSS_SELECTOR, "#main > div > div:nth-child(3
     div > div.container > div.product-briefing.flex.card.s9-a-0 > div.flex.flex-auto.RBf1cu > div > \
         div.h-y3ij > div > div.flex.rY0UiC.lml8Go > div > div.mHANnI > div.WZTmVh > div").text
 
-test = browser.find_elements(By.CSS_SELECTOR, ".h-y3ij .flex")
 
-r1 = []
-for i in test:
-    r1.append(i.find_element(By.CSS_SELECTOR, "div div div").text)
-    print(r1)
-# print(title, avg_star, total_reviews, total_sold, price, free_ship, sep="\n")
+print(title, avg_star, total_reviews, total_sold, price, free_ship, sep="\n")
 
