@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import pandas as pd
 
 #setup selenium
-link = 'https://shopee.vn/-M%C3%A3-ELBMO2-gi%E1%BA%A3m-12-%C4%91%C6%A1n-500K-Ugreen-Chu%E1%BB%99t-kh%C3%B4ng-d%C3%A2y-ti%E1%BB%87n-d%E1%BB%A5ng-6-n%C3%BAt-im-l%E1%BA%B7ng-5-c%E1%BA%A5p-%C4%91%E1%BB%99-4000dpi-cho-for-PC-MacBook-Air-M1-iPad-Gen-9-Laptop-i.325696535.14478688162?sp_atk=610cc335-0fbb-49d1-9ff7-6587423921a7&xptdk=610cc335-0fbb-49d1-9ff7-6587423921a7'
+link = 'https://shopee.vn/Chu%E1%BB%99t-kh%C3%B4ng-d%C3%A2y-Bluetooth-Logitech-MX-Master-3s-%E2%80%93-Y%C3%AAn-t%C4%A9nh-8K-DPI-Cu%E1%BB%99n-si%C3%AAu-nhanh-s%E1%BA%A1c-USB-C-Win-Mac-i.52679373.21616681122?sp_atk=2f5d4ef7-8a48-4747-be23-728698ab8fa0&xptdk=2f5d4ef7-8a48-4747-be23-728698ab8fa0'
 start_time = time()
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
@@ -42,6 +42,18 @@ free_ship = browser.find_element(By.CSS_SELECTOR, "#main > div > div:nth-child(3
     div > div.container > div.product-briefing.flex.card.s9-a-0 > div.flex.flex-auto.RBf1cu > div > \
         div.h-y3ij > div > div.flex.rY0UiC.lml8Go > div > div.mHANnI > div.WZTmVh > div").text
 
+supplement_list = browser.find_element(By.CLASS_NAME, "h-y3ij").text.split("\n")
 
-print(title, avg_star, total_reviews, total_sold, price, free_ship, sep="\n")
+print(supplement_list)
+insurance = "Bảo hiểm Thiết bị điện tử"
+
+if insurance in supplement_list:
+    print(True)
+else:
+    print(False)
+
+# print(title, avg_star, total_reviews, total_sold, price, free_ship, sep="\n")
+sleep(2)
+browser.close()
+
 
