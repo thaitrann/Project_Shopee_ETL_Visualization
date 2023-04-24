@@ -105,3 +105,7 @@ print(shop_name, shop_favourite_tag, shop_link, shop_total_review, shop_total_pr
 
 sleep(1)
 browser.close()
+
+# tạo file setup selenium.
+# update file crawl_url: crawl thêm trường "gửi hàng từ"
+# hoàn thành file_detail_product: chuyển thành dạng dataframe ghi vào csv, thử nghiệm crawl toàn bộ dựa trên link của file crawl_url
