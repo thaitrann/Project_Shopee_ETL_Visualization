@@ -12,3 +12,16 @@ chrome_options.add_experimental_option("detach", True)
 browser = webdriver.Chrome(executable_path="chromedriver.exe",chrome_options=chrome_options)
 browser.set_window_position(-1000, 0)
 browser.maximize_window()
+
+def get_proxy(browser):
+    browser.get('https://free-proxy-list.net/')
+    table = browser.find_elements(By.CSS_SELECTOR,"table.table-striped.table-bordered tbody tr")
+    proxy_list = []
+    for row in table:
+        proxy_list.append(row.text)
+    print(proxy_list)
+
+if __name__ == '__main__':
+    get_proxy(browser)
+    
+#42.118.46.60 

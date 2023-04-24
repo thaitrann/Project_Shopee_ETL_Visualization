@@ -7,7 +7,6 @@ link = "https://shopee.vn/search?keyword={}&page={}&sortBy=sales"
 link_firstpage = link
 link_firstpage = link_firstpage.format(text_search, page_start)
 start_time = time()
-
 browser.get(link_firstpage)
 browser.implicitly_wait(10)
 
@@ -32,13 +31,14 @@ def getProducts(browser, number_of_page):
         send_from_list.append(product.find_element(By.CLASS_NAME, "zGGwiV").text)
 
     dataframe = pd.DataFrame(
-        {'name': name_list,
-         'quantity_sound_in_month': quantity_sold_in_month_list,
-        'link_shopee': link_list,
-        'send_from': send_from_list
+        {
+            'name': name_list,
+            'quantity_sound_in_month': quantity_sold_in_month_list,
+            'link_shopee': link_list,
+            'send_from': send_from_list
         })
     
-    dataframe.to_csv("E:\MyDesktop\ThaiTran\Personal_Project\Project_Shopee_ETL_Visualization\Data\Test{}.csv".format(number_of_page))
+    # dataframe.to_csv("E:\MyDesktop\ThaiTran\Personal_Project\Project_Shopee_ETL_Visualization\Data\Test{}.csv".format(number_of_page))
     # print(dataframe.to_markdown)
     print("Page {}: {} rows, {} columns".format(number_of_page, dataframe.shape[0], dataframe.shape[1]))
     browser.implicitly_wait(10)
@@ -78,4 +78,3 @@ except:
         browser.close()
         
 print("--- Runtime: {} seconds ---".format(round(time() - start_time), 0))
-
