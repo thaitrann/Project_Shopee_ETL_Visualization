@@ -1,20 +1,8 @@
-from time import sleep, time
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import pandas as pd
+from setup import *
 
-#setup selenium
+#get link
 link = 'https://shopee.vn/B%E1%BB%99-b%C3%A0n-ph%C3%ADm-k%C3%A8m-chu%E1%BB%99t-gaming-c%C3%B3-d%C3%A2y-gi%E1%BA%A3-c%C6%A1-t%C3%ADch-h%E1%BB%A3p-b%E1%BA%ADt-t%E1%BA%AFt-ch%E1%BA%BF-%C4%91%E1%BB%99-%C4%91%C3%A8n-led-ti%E1%BB%87n-l%E1%BB%A3i-d%C3%A0nh-cho-game-th%E1%BB%A7-v%C4%83n-ph%C3%B2ng-i.93922606.1546899006?sp_atk=42a5fb69-e1fc-4c81-93fb-5b81bee559f6&xptdk=42a5fb69-e1fc-4c81-93fb-5b81bee559f6'
 start_time = time()
-chrome_options = webdriver.ChromeOptions()
-chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
-chrome_options.add_experimental_option("detach", True)
-
-browser = webdriver.Chrome(executable_path="chromedriver.exe",chrome_options=chrome_options)
-browser.set_window_position(-1000, 0)
-browser.maximize_window()
 browser.get(link)
 browser.implicitly_wait(10)
 

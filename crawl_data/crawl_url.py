@@ -1,9 +1,4 @@
-from time import sleep, time
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import pandas as pd
+from setup import *
 
 #setup selenium
 text_search = "mx master 3s"
@@ -12,13 +7,7 @@ link = "https://shopee.vn/search?keyword={}&page={}&sortBy=sales"
 link_firstpage = link
 link_firstpage = link_firstpage.format(text_search, page_start)
 start_time = time()
-chrome_options = webdriver.ChromeOptions()
-chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
-chrome_options.add_experimental_option("detach", True)
 
-browser = webdriver.Chrome(executable_path="chromedriver.exe",chrome_options=chrome_options)
-browser.set_window_position(-1000, 0)
-browser.maximize_window()
 browser.get(link_firstpage)
 browser.implicitly_wait(10)
 
