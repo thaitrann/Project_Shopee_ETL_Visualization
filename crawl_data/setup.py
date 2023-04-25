@@ -17,7 +17,7 @@ def get_proxy(browser, chrome_options):
     browser.get('https://free-proxy-list.net/')
     table = browser.find_elements(By.CSS_SELECTOR,"table.table-striped.table-bordered tbody tr")
     proxy_list = []
-    asean_list = ['BN','KH','TL','ID','LA','MY','MM','PH','SG','TH','VN']
+    asean_list = ['VN']
     for row in table:
         proxy_list.append(row.text)
     df = pd.DataFrame({"col": proxy_list})['col'].str.split(" ", expand=True)
@@ -32,18 +32,17 @@ def get_proxy(browser, chrome_options):
     proxy_format = random_proxy[['ip', 'port']].apply(":".join, axis=1)
     proxy = proxy_format.iloc[0]
     print(proxy,"---DONE---", sep="\n")
+    browser.close()
     return proxy
 
 if __name__ == '__main__':
-    chrome_options_1 = webdriver.ChromeOptions()
-    chrome_options.add_argument('--proxy-server=%s' % get_proxy(browser, chrome_options))
-    chrome_options_1.add_experimental_option('excludeSwitches', ['enable-logging'])
-    chrome_options_1.add_experimental_option("detach", True)
-    
+    proxy = get_proxy(browser, chrome_options)
+    sleep(2)
+    chrome_options.add_argument('--proxy-server=%s' % proxy)
     browser_shopee = webdriver.Chrome(executable_path="chromedriver.exe",chrome_options=chrome_options)
     browser_shopee.set_window_position(-1000, 0)
     browser_shopee.maximize_window()
-    browser_shopee.get('https://shopee.vn/')
+    browser_shopee.get('https://whoer.net/')
     
 # asean_list = ['BN','KH','TL','ID','LA','MY','MM','PH','SG','TH','VN']
 
