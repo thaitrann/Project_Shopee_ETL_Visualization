@@ -45,5 +45,3 @@ if __name__ == '__main__':
     browser_shopee.get('https://whoer.net/')
     
 # asean_list = ['BN','KH','TL','ID','LA','MY','MM','PH','SG','TH','VN']
-
-#42.118.46.60
