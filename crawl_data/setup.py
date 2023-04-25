@@ -13,15 +13,38 @@ browser = webdriver.Chrome(executable_path="chromedriver.exe",chrome_options=chr
 browser.set_window_position(-1000, 0)
 browser.maximize_window()
 
-def get_proxy(browser):
+def get_proxy(browser, chrome_options):
     browser.get('https://free-proxy-list.net/')
     table = browser.find_elements(By.CSS_SELECTOR,"table.table-striped.table-bordered tbody tr")
     proxy_list = []
+    asean_list = ['BN','KH','TL','ID','LA','MY','MM','PH','SG','TH','VN']
     for row in table:
         proxy_list.append(row.text)
-    print(proxy_list)
+    df = pd.DataFrame({"col": proxy_list})['col'].str.split(" ", expand=True)
+    df_proxy = df.iloc[:, 0:3].copy()
+    df_proxy = df_proxy.rename(columns={0: 'ip', 1: 'port', 2:'code_nation'})
+    
+    index = df_proxy[df_proxy['code_nation'].isin(asean_list)].index
+    df_proxy_asean = df_proxy.loc[index]
+    df_proxy.to_csv("E:\MyDesktop\ThaiTran\Personal_Project\Project_Shopee_ETL_Visualization\Data\proxy.csv")
+    df_proxy_asean.to_csv("E:\MyDesktop\ThaiTran\Personal_Project\Project_Shopee_ETL_Visualization\Data\proxy_aseans.csv")
+    random_proxy = df_proxy_asean[['ip','port']].sample(1)
+    proxy_format = random_proxy[['ip', 'port']].apply(":".join, axis=1)
+    proxy = proxy_format.iloc[0]
+    print(proxy,"---DONE---", sep="\n")
+    return proxy
 
 if __name__ == '__main__':
-    get_proxy(browser)
+    chrome_options_1 = webdriver.ChromeOptions()
+    chrome_options.add_argument('--proxy-server=%s' % get_proxy(browser, chrome_options))
+    chrome_options_1.add_experimental_option('excludeSwitches', ['enable-logging'])
+    chrome_options_1.add_experimental_option("detach", True)
     
-#42.118.46.60 
+    browser_shopee = webdriver.Chrome(executable_path="chromedriver.exe",chrome_options=chrome_options)
+    browser_shopee.set_window_position(-1000, 0)
+    browser_shopee.maximize_window()
+    browser_shopee.get('https://shopee.vn/')
+    
+# asean_list = ['BN','KH','TL','ID','LA','MY','MM','PH','SG','TH','VN']
+
+#42.118.46.60
