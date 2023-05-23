@@ -1,4 +1,4 @@
-# Project_Shopee_ETL_Visualization
+# Project_Tiki_ETL_Visualization
 ## Technical Stack:
 + Monitor workflows: Airflow
 + Crawl data from Shopee: Python (Selenium)
