@@ -1,7 +1,7 @@
 # Project_Tiki_ETL_Visualization
 ## Technical Stack:
 + Monitor workflows: Airflow
-+ Crawl data from Shopee: Python (Selenium)
++ Crawl data from Tiki: Python (Selenium)
 + Store raw data: MongoDB
 + Data cleaning: Python
 + Store cleaned data: Hadoop + Hive
