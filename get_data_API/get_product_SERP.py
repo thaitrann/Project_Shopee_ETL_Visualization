@@ -1,11 +1,10 @@
-import requests
-import time
-import pandas as pd
-import random
-from datetime import datetime
+#SERP - Search Engine Results Page
+from setup import *
 
 text_search = 'mx master 3s'
 num_of_pages_crawl = 5
+
+collection_product_serp = products_tiki["collection_product_serp"]
 url = 'https://tiki.vn/api/v2/products'
 headers = ''
 params = {
@@ -18,18 +17,19 @@ params = {
     'page': 1
 }
 start_time = time.time()
-def crawl_product_onepage(url, headers, params, num_of_pages_crawl):
-    product_id = []
+
+def get_product_serp(url, headers, params, num_of_pages_crawl):
+    products_id = []
     for i in range(1, num_of_pages_crawl + 1):
         params['page'] = i
         response = requests.get(url=url, headers=headers, params=params)
         if response.status_code == 200:
             print('Request success page {}!'.format(i))
             for record in response.json().get('data'):
-                product_id.append({
+                products_id.append({
+                    'product_id': record.get('id'),
+                    'product_name': record.get('name'),
                     'primary_category_name': record.get('primary_category_name'),
-                    'id': record.get('id'),
-                    'name': record.get('name'),
                     'brand_id': record.get('brand_id'),
                     'brand_name': record.get('brand_name'),
                     'discount': record.get('discount'),
@@ -47,11 +47,10 @@ def crawl_product_onepage(url, headers, params, num_of_pages_crawl):
                     })
         time.sleep(random.randrange(1, 5))
         
-    df_product = pd.DataFrame(product_id)
-    df_product.to_csv("product_id.csv")
-    print("---Done!---")
+    collection_product_serp.insert_many(products_id)
+    print("--- Done! ---")
     
-crawl_product_onepage(url, headers, params, num_of_pages_crawl)
+get_product_serp(url, headers, params, num_of_pages_crawl)
 print("--- Runtime: {} seconds ---".format(round(time.time() - start_time), 0))
 
 
