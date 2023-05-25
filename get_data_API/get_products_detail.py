@@ -62,8 +62,10 @@ products_detail.append({
 print(pd.DataFrame(products_detail))
 print("--- Runtime: {} seconds ---".format(round(time.time() - start_time), 0))
 
-
-
+# task ngày mai:
+#     hoàn thành lấy toàn detail product dựa trên product id và seller id trong database và lưu vào mongodb
+#     lưu 2 file csv backup cho 2 bảng data
+#     tìm hiểu spark để lưu trữ vào hadoop
 
 
             
