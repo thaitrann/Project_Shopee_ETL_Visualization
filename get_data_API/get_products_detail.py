@@ -1,20 +1,30 @@
-#SERP - Search Engine Results Page
 from setup import *
 
 text_search = 'mx master 3s'
 num_of_pages_crawl = 5
 
-url = 'https://tiki.vn/api/v2/products/188685608'
+url_detail_products = 'https://tiki.vn/api/v2/products/188685608'
+url_seller = 'https://tiki.vn/api/shopping/v2/widgets/seller?seller_id=192004'
+url_review = 'https://tiki.vn/api/v2/reviews?product_id=188685608&seller_id=192004'
+
 headers = ''
 params = {}
 start_time = time.time()
 
-response = requests.get(url=url, headers=headers, params=params)
-products_detail_json = response.json()
+response_detail_products = requests.get(url=url_detail_products, headers=headers, params=params)
+products_detail_json = response_detail_products.json()
+
+response_seller = requests.get(url=url_seller, headers=headers, params=params)
+seller_json = response_seller.json().get('data').get('seller')
+
+response_review = requests.get(url=url_review, headers=headers, params=params)
+review_json = response_review.json()
 
 products_detail = []
 products_detail.append({
     'product_id': products_detail_json.get('id'),
+    'seller_id': products_detail_json.get('current_seller').get('id'),
+    'seller_name': products_detail_json.get('current_seller').get('name'),
     'all_time_quantity_sold': products_detail_json.get('all_time_quantity_sold'),
     'category_id': products_detail_json.get('categories').get('id'),
     'category_name': products_detail_json.get('categories').get('name'),
@@ -30,12 +40,26 @@ products_detail.append({
         if products_detail_json.get('quantity_sold') else 0),
     'rating_average': products_detail_json.get('rating_average'),
     'review_count': products_detail_json.get('review_count'),
+    'url': products_detail_json.get('short_url'),
+    'seller_level': seller_json.get('store_level'),
     'configurable_products': ([[item['child_id'], item['name'], item['option1'], \
         item['price'], item['inventory_status']] for item in products_detail_json.get('configurable_products')]\
-            if products_detail_json.get('configurable_products') else [])
+            if products_detail_json.get('configurable_products') else []),
+    '1_star_count': response_review.json().get('stars').get('1').get('count'),
+    '1_star_percent': response_review.json().get('stars').get('1').get('percent'),
+    '2_star_count': response_review.json().get('stars').get('2').get('count'),
+    '2_star_percent': response_review.json().get('stars').get('2').get('percent'),
+    '3_star_count': response_review.json().get('stars').get('3').get('count'),
+    '3_star_percent': response_review.json().get('stars').get('3').get('percent'),
+    '4_star_count': response_review.json().get('stars').get('4').get('count'),
+    '4_star_percent': response_review.json().get('stars').get('4').get('percent'),
+    '5_star_count': response_review.json().get('stars').get('5').get('count'),
+    '5_star_percent': response_review.json().get('stars').get('5').get('percent'),
+    'completion_time': datetime.now()
     })
 
-print(products_detail)
+
+print(pd.DataFrame(products_detail))
 print("--- Runtime: {} seconds ---".format(round(time.time() - start_time), 0))
 
 
