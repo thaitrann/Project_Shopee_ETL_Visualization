@@ -2,7 +2,7 @@
 from setup import *
 
 text_search = 'mx master 3s'
-num_of_pages_crawl = 20
+num_of_pages_crawl = 5
 #connect mongodb
 collection_product_serp = products_tiki["collection_product_serp"]
 
@@ -30,6 +30,9 @@ def get_product_serp(url, headers, params, num_of_pages_crawl):
                 products_id.append({
                     'product_id': record.get('id'),
                     'product_name': record.get('name'),
+                    'seller_id': record.get('seller_id'),
+                    'seller_name': record.get('seller_name'),
+                    'seller_product_id': record.get('seller_product_id'),
                     'primary_category_name': record.get('primary_category_name'),
                     'brand_id': record.get('brand_id'),
                     'brand_name': record.get('brand_name'),
@@ -40,8 +43,6 @@ def get_product_serp(url, headers, params, num_of_pages_crawl):
                     'primary_category_name': record.get('primary_category_name'),
                     'rating_average': record.get('rating_average'),
                     'review_count': record.get('review_count'),
-                    'seller_id': record.get('seller_id'),
-                    'seller_name': record.get('seller_name'),
                     'shipping_code': next(item for item in record.get('badges_new') if item["placement"] == "delivery_info")['code'],
                     'shipping_text': next(item for item in record.get('badges_new') if item["placement"] == "delivery_info")['text'],
                     'completion_time': datetime.now()
@@ -55,6 +56,8 @@ def get_product_serp(url, headers, params, num_of_pages_crawl):
     print("--- Done! ---")
     
 get_product_serp(url, headers, params, num_of_pages_crawl)
+
+myclient.close()
 print("--- Runtime: {} seconds ---".format(round(time.time() - start_time), 0))
 
 
