@@ -77,8 +77,5 @@ get_products_detail()
 myclient.close()
 print("--- Runtime: {} seconds ---".format(round(time.time() - start_time), 0))
 
-# task ngày mai:
-#     tìm hiểu spark để lưu trữ vào hadoop
-
 
             
