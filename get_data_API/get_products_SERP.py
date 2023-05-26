@@ -2,9 +2,10 @@
 from setup import *
 
 text_search = 'mx master 3s'
-num_of_pages_crawl = 5
-
+num_of_pages_crawl = 20
+#connect mongodb
 collection_product_serp = products_tiki["collection_product_serp"]
+
 url = 'https://tiki.vn/api/v2/products'
 headers = ''
 params = {
@@ -46,7 +47,10 @@ def get_product_serp(url, headers, params, num_of_pages_crawl):
                     'completion_time': datetime.now()
                     })
         time.sleep(random.randrange(1, 5))
-        
+    #backup csv
+    pd.DataFrame(products_id).to_csv("get_products_SERP.csv")
+    
+    #insert data to mongodb
     collection_product_serp.insert_many(products_id)
     print("--- Done! ---")
     
