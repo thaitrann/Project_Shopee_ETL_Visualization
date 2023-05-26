@@ -51,16 +51,16 @@ def get_products_detail():
             'configurable_products': ([[item['child_id'], item['name'], item['option1'], \
                 item['price'], item['inventory_status']] for item in products_detail_json.get('configurable_products')]\
                     if products_detail_json.get('configurable_products') else []),
-            '1_star_count': response_review.json().get('stars').get('1').get('count'),
-            '1_star_percent': response_review.json().get('stars').get('1').get('percent'),
-            '2_star_count': response_review.json().get('stars').get('2').get('count'),
-            '2_star_percent': response_review.json().get('stars').get('2').get('percent'),
-            '3_star_count': response_review.json().get('stars').get('3').get('count'),
-            '3_star_percent': response_review.json().get('stars').get('3').get('percent'),
-            '4_star_count': response_review.json().get('stars').get('4').get('count'),
-            '4_star_percent': response_review.json().get('stars').get('4').get('percent'),
+            '1_star_count': review_json.get('stars').get('1').get('count'),
+            '1_star_percent': review_json.get('stars').get('1').get('percent'),
+            '2_star_count': review_json.get('stars').get('2').get('count'),
+            '2_star_percent': review_json.get('stars').get('2').get('percent'),
+            '3_star_count': review_json.get('stars').get('3').get('count'),
+            '3_star_percent': review_json.get('stars').get('3').get('percent'),
+            '4_star_count': review_json.get('stars').get('4').get('count'),
+            '4_star_percent': review_json.get('stars').get('4').get('percent'),
             '5_star_count': response_review.json().get('stars').get('5').get('count'),
-            '5_star_percent': response_review.json().get('stars').get('5').get('percent'),
+            '5_star_percent': review_json.get('stars').get('5').get('percent'),
             'completion_time': datetime.now()
             })
         count_product += 1
@@ -78,8 +78,6 @@ myclient.close()
 print("--- Runtime: {} seconds ---".format(round(time.time() - start_time), 0))
 
 # task ngày mai:
-#     hoàn thành lấy toàn detail product dựa trên product id và seller id trong database và lưu vào mongodb
-#     lưu 2 file csv backup cho 2 bảng data
 #     tìm hiểu spark để lưu trữ vào hadoop
 
 

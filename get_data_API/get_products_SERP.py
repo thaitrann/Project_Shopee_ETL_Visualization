@@ -4,7 +4,7 @@ from setup import *
 text_search = 'mx master 3s'
 num_of_pages_crawl = 5
 #connect mongodb
-collection_product_serp = products_tiki["collection_product_serp"]
+collection_products_serp = products_tiki["collection_product_serp"]
 
 url = 'https://tiki.vn/api/v2/products'
 headers = ''
@@ -47,15 +47,18 @@ def get_product_serp(url, headers, params, num_of_pages_crawl):
                     'shipping_text': next(item for item in record.get('badges_new') if item["placement"] == "delivery_info")['text'],
                     'completion_time': datetime.now()
                     })
-        time.sleep(random.randrange(1, 5))
+        time.sleep(random.randrange(1, 2))
     #backup csv
     pd.DataFrame(products_id).to_csv("get_products_SERP.csv")
     
     #insert data to mongodb
-    collection_product_serp.insert_many(products_id)
+    collection_products_serp.insert_many(products_id)
     print("--- Done! ---")
-    
+
 get_product_serp(url, headers, params, num_of_pages_crawl)
+
+count_documents = collection_products_serp.count_documents({})
+print('Total documents: {}'.format(count_documents))
 
 myclient.close()
 print("--- Runtime: {} seconds ---".format(round(time.time() - start_time), 0))
