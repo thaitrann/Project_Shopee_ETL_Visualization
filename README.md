@@ -1,9 +1,9 @@
 # Project_Tiki_ETL_Visualization
 ## Technical Stack:
 + Monitor workflows: Airflow
-+ Crawl data from Tiki: Python (Selenium)
++ Get data from API Tiki: Python (requests)
 + Store raw data: MongoDB
-+ Data cleaning: Python
++ Data cleaning: Spark
 + Store cleaned data: Hadoop + Hive
 + Data visualization: Power BI
 ## Mind Map:
