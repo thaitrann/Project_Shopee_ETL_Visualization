@@ -45,6 +45,7 @@ def get_product_serp(url, headers, params, num_of_pages_crawl):
                     'review_count': record.get('review_count'),
                     'shipping_code': next(item for item in record.get('badges_new') if item["placement"] == "delivery_info")['code'],
                     'shipping_text': next(item for item in record.get('badges_new') if item["placement"] == "delivery_info")['text'],
+                    'page': i,
                     'completion_time': datetime.now()
                     })
         time.sleep(random.randrange(1, 2))
@@ -53,7 +54,7 @@ def get_product_serp(url, headers, params, num_of_pages_crawl):
     
     #insert data to mongodb
     collection_products_serp.insert_many(products_id)
-    print("--- Done! ---")
+    print("--- Done! {} pages ---".format(num_of_pages_crawl))
 
 get_product_serp(url, headers, params, num_of_pages_crawl)
 
