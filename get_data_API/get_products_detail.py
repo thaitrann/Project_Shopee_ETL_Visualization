@@ -4,7 +4,7 @@ start_time = time.time()
 
 def get_products_detail():
     #connect mongodb
-    collection_products_serp = products_tiki["collection_product_serp"]
+    collection_products_serp = products_tiki["collection_products_serp"]
     collection_products_detail = products_tiki["collection_products_detail"]
     count_documents = collection_products_serp.count_documents({})
     print('Number of documents: {}'.format(count_documents))
@@ -68,7 +68,7 @@ def get_products_detail():
         time.sleep(random.randrange(1, 2))
         
     #backup csv
-    pd.DataFrame(products_detail).to_csv("get_products_detail.csv")
+    pd.DataFrame(products_detail).to_csv("data_backup/get_products_detail.csv")
     #insert data to mongodb
     collection_products_detail.insert_many(products_detail)
     print("--- Done! ---")
