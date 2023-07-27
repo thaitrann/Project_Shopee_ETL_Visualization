@@ -7,4 +7,4 @@
 + Store cleaned data: Hadoop + Hive
 + Data visualization: Power BI
 ## Mind Map:
-<p align = 'center'><img src="Mindmap/Tiki Project.png" alt="Italian Trulli"></p>
+<p align = 'center'><img src="Mindmap/Tiki_Project.png" alt="Italian Trulli"></p>
