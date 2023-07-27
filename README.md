@@ -1,5 +1,5 @@
 # Project_Tiki_ETL_Visualization
-## Technical Stack:
+## Tech Stack:
 + Monitor workflows: Airflow
 + Get data from API Tiki: Python (requests)
 + Store raw data: MongoDB
