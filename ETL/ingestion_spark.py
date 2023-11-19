@@ -1,3 +1,4 @@
+#INGEST RAW DATA FROM MONGODB TO HDFS DATALAKE
 from setup import *
 
 collections = ['collection_products_serp', 'collection_products_detail']
