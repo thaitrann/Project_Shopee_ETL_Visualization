@@ -8,9 +8,6 @@ from pyarrow import fs
 # collection_products_serp_df = spark.read.parquet(collection_products_serp_path)
 # collection_products_detail_df = spark.read.parquet(collection_products_detail_path)
 
-fs = FileSystem.get(URI("hdfs://localhost:19000"), Configuration())
-exists = fs.exists(Path('/datalake/collection_products_serp'))
-
 dwh_tables = ["Dim_Category", "Dim_Product", "Dim_Inventory", "Dim_Seller", "Dim_Star", "Dim_Brand", "Dim_Shipping", \
     "Dim_Gift", "Dim_Url", "Dim_Time", "Dim_ConfigurableProduct", "Fact_Sales", "Fact_Product"]
 
@@ -25,17 +22,10 @@ def create_table_hadoop(dwh_tables):
 
 #create_table_hadoop(dwh_tables)
 
-fs = FileSystem.get(URI("hdfs://localhost:19000"), Configuration())
-exists = fs.exists(Path('/datawarehouse/Dim_Category'))
-location_datawarehouse = 'hdfs://localhost:19000/datawarehouse/Dim_Category'
-if exists:
-    df_datawarehouse = spark.read.parquet(location_datawarehouse)
-    max_date_df_datawarehouse = df_datawarehouse.select(F.max(F.col("completion_time"))).rdd.first()[0]
-else:
-    max_date_df_datawarehouse = datetime.datetime.fromtimestamp(0)
+dl_collection_products_detail = spark.read.parquet("hdfs://localhost:19000/datalake/collection_products_detail")
+dw_Dim_Category = spark.read.format("parquet").load("hdfs://localhost:19000/datawarehouse/Dim_Category")
 
-print(max_date_df_datawarehouse)
+# selected_col = dl_collection_products_detail.select("category_id","category_name")
+print(dw_Dim_Category.rdd.isEmpty())
 
-
-#lấy year, month, day trong datalake làm partition cho bảng dim.
-#tạo bảng dim bằng tổng hợp bảng trong datalake, lấy dòng mới nhất lưu vào.
+#thêm schema cho bảng dwh
