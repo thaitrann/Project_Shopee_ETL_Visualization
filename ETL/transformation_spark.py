@@ -1,31 +1,29 @@
 # transform from HDFS datalake to HDFS data warehouse
 from setup import *
-from pyarrow import fs
-
-# load data to spark df
-# collection_products_serp_path = "hdfs://localhost:19000/datalake/collection_products_serp"
-# collection_products_detail_path = "hdfs://localhost:19000//datalake/collection_products_detail"    
-# collection_products_serp_df = spark.read.parquet(collection_products_serp_path)
-# collection_products_detail_df = spark.read.parquet(collection_products_detail_path)
-
-dwh_tables = ["Dim_Category", "Dim_Product", "Dim_Inventory", "Dim_Seller", "Dim_Star", "Dim_Brand", "Dim_Shipping", \
-    "Dim_Gift", "Dim_Url", "Dim_Time", "Dim_ConfigurableProduct", "Fact_Sales", "Fact_Product"]
-
-def create_table_hadoop(dwh_tables):
-    for table in dwh_tables:
-        path = "/datawarehouse/{}".format(table)
-        if not fs.exists(sc._jvm.org.apache.hadoop.fs.Path(path)):
-            fs.mkdirs(Path(path))
-            print("Table created: {}!".format(table))
-        else:
-            print("Table already exists: {}!".format(table))
-
-#create_table_hadoop(dwh_tables)
+from schema import *
 
 dl_collection_products_detail = spark.read.parquet("hdfs://localhost:19000/datalake/collection_products_detail")
-dw_Dim_Category = spark.read.format("parquet").load("hdfs://localhost:19000/datawarehouse/Dim_Category")
 
-# selected_col = dl_collection_products_detail.select("category_id","category_name")
-print(dw_Dim_Category.rdd.isEmpty())
-
-#thêm schema cho bảng dwh
+selected_col = dl_collection_products_detail.dropDuplicates(["category_id", "category_name"])
+print(selected_col.show())
+print(selected_col.count())
+# if dim_category_df.count() == 0:
+#     dl_collection_products_detail.write.partitionBy('completion_year', 'completion_month', 'completion_day')\
+#         .mode('append')\
+#         .parquet(location_table_dwh)
+# else:
+#     # Lấy dữ liệu mới nhất từ bảng B
+#     max_b = df_b.agg({"timestamp_column": "max"}).collect()[0][0]
+    
+#     # Lọc những dữ liệu mới hơn dữ liệu đã tồn tại trong bảng B
+#     df_a_new_filtered = df_a_new.filter(df_a_new["timestamp_column"] > max_b)
+    
+#     # Kiểm tra xem có dữ liệu mới hay không
+#     if df_a_new_filtered.count() == 0:
+#         print("Không có dữ liệu mới nhất.")
+#     else:
+#         # Ghi dữ liệu mới vào bảng B và thêm partition bằng thời gian mới nhất
+#         df_a_new_filtered.write.format("parquet") \
+#             .mode("append") \
+#             .partitionBy("timestamp_column") \
+#             .save("hdfs://path_to_data_warehouse/table_b")

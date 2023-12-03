@@ -7,7 +7,6 @@ def Ingestion(collections):
         uri = "mongodb://localhost:27017/products_tiki.{}".format(collection)
 
         #get the latest record in datalake 
-        fs = FileSystem.get(URI("hdfs://localhost:19000"), Configuration())
         exists = fs.exists(Path('/datalake/{}'.format(collection)))
         location_datalake = 'hdfs://localhost:19000/datalake/{}'.format(collection)
         if exists:
