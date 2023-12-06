@@ -19,6 +19,7 @@ dim_category_schema = StructType([
     StructField("category_id", IntegerType(), nullable = False),
     StructField("category_name", StringType(), nullable = False)
 ])
+
 location_table_dwh = 'hdfs://localhost:19000/datawarehouse/Dim_Category'
 dim_category_df = spark.read.schema(dim_category_schema).parquet(location_table_dwh)
 
