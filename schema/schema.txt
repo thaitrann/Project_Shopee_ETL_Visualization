@@ -1,0 +1,33 @@
+Dim_Category(category_id(PK), category_name)
+Dim_Product(product_id(PK), product_name)
+Dim_ConfigurableProduct(configurable_product_id(PK), configurable_product_name, configurable_product_type, configurable_product_price, configurable_product_status)
+Dim_Inventory(inventory_sgg_id(PK), inventory_status, inventory_type)
+Dim_Seller(seller_id(PK), seller_name)
+Dim_Star(star_sgg_id(PK), star_count, star_percent)
+Dim_Brand(brand_id(PK), brand_name)
+Dim_Shipping(shipping_sgg_id(PK), shipping_code, shipping_text)
+Dim_Gift(gift_sgg_id(PK), gift_item_title)
+Dim_Url(url_sgg_id(PK), url)
+Dim_Time(time_sgg_id(PK), date, day_of_week, month, quarter, year)
+
+Fact_Sales(
+    category_id(FK), brand_id(FK), product_id(FK), gift_sgg_id(FK), inventory_sgg_id(FK), 
+    url_sgg_id(PK),seller_id(FK), star_sgg_id(FK), time_sgg_id(FK),
+    discount,
+    discount_rate, 
+    original_price,
+    price,
+    rating_average,
+    review_count
+    )
+
+Fact_Product(
+    category_id(FK), brand_id(FK), product_id(FK), gift_sgg_id(FK), inventory_sgg_id(FK),
+    url_sgg_id(PK),seller_id(FK), star_sgg_id(FK), time_sgg_id(FK),
+    all_time_quantity_sold,
+    day_ago_created,
+    favourite_count,
+    list_price,
+    quantity_sold
+
+)

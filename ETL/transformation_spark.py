@@ -22,3 +22,5 @@ else:
 test = spark.read.parquet(location_table_dwh)
 print(test.show(test.count(), truncate=False))
 print(test.count())
+
+#tách các bảng thành các hàm riêng để chạy airflow
