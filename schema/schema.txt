@@ -31,3 +31,13 @@ Fact_Product(
     quantity_sold
 
 )
+
+dwh_tables = ["Dim_Category", 
+"Dim_Product", 
+"Dim_ConfigurableProduct",
+"Dim_Inventory",
+"Dim_Seller",
+"Dim_Star", 
+"Dim_Brand", 
+"Dim_Shipping", \
+    "Dim_Gift", "Dim_Url", "Dim_Time","Fact_Sales", "Fact_Product"]
