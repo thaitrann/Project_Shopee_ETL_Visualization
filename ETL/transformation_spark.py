@@ -52,18 +52,23 @@ def dim_product():
 # dim_product()
 
 def dim_configurable_product():
+    default_values = array([lit("None"), lit("None"), lit("None"), lit(0), lit("None")])
     selected_col = read_parquet_collection_products_detail("product_id","seller_id","configurable_products")
-    df_exploded = selected_col.withColumn("exploded_values", explode("configurable_products"))
-    df_parsed = (
-    df_exploded.withColumn("parsed_values", split(col("exploded_values"), ","))
-        .withColumn("configurable_products_id", col("parsed_values")[0])
-        .withColumn("configurable_products_name", col("parsed_values")[1])
-        .withColumn("configurable_products_description", col("parsed_values")[2])
-        .withColumn("configurable_products_price", col("parsed_values")[3])
-        .withColumn("configurable_products_status", col("parsed_values")[4])
-        .drop("exploded_values", "parsed_values")
+    selected_col = selected_col.withColumn("configurable_products", when(size(selected_col["configurable_products"]) == 0, default_values).otherwise(col("configurable_products")))
+    df_exploded = selected_col.withColumn("configurable_products_detail", explode(selected_col["configurable_products"]))
+    df_final = df_exploded.select(
+    "product_id",
+    "seller_id",
+    df_exploded["configurable_products_detail"][0].alias("configurable_products_id"),
+    df_exploded["configurable_products_detail"][1].alias("configurable_products_name"),
+    df_exploded["configurable_products_detail"][2].alias("configurable_products_type"),
+    df_exploded["configurable_products_detail"][3].alias("configurable_products_price"),
+    df_exploded["configurable_products_detail"][4].alias("configurable_products_status")
 )
-    print(df_parsed.show())
+    print(df_final.show())
+    print(df_final.count())
+    pd_df = df_exploded.toPandas()
+    pd_df.to_excel("E:/test.xlsx")
 dim_configurable_product()
 
 def dim_inventory():
