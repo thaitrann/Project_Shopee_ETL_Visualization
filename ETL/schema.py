@@ -18,7 +18,7 @@ def create_schema_location(table_name, schema):
     dim_df = spark.read.schema(schema).parquet(location_df)
     return location_df, dim_df
         
-# create_tables(dwh_tables)
+create_tables(dwh_tables)
 
 #schema
 #Dim_Category
@@ -39,6 +39,8 @@ dim_product_location, dim_product_df = create_schema_location(dim_product_name, 
 
 #Dim_ConfigurableProduct
 dim_configurable_product_schema = StructType([
+    StructField("product_id", IntegerType(), nullable=False),
+    StructField("seller_id", IntegerType(), nullable=False),
     StructField("configurable_product_id", IntegerType(), nullable=False),
     StructField("configurable_product_name", StringType(), nullable=False),
     StructField("configurable_product_type", StringType(), nullable=False),

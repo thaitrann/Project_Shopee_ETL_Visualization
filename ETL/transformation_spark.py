@@ -48,13 +48,11 @@ def dim_category():
 
 def dim_product():
     selected_col = read_parquet_collection_products_serp("product_id", "product_name")
-    load_dl_to_dwh(dim_product_location, dim_product_df, dim_product_name, selected_col)
+    load_dl_to_dwh(dim_product_location, dim_product_df, dim_product_name, selected_col) 
 # dim_product()
 
 def dim_configurable_product():
-    default_values = array([lit("None"), lit("None"), lit("None"), lit(0), lit("None")])
     selected_col = read_parquet_collection_products_detail("product_id","seller_id","configurable_products")
-    selected_col = selected_col.withColumn("configurable_products", when(size(selected_col["configurable_products"]) == 0, default_values).otherwise(col("configurable_products")))
     df_exploded = selected_col.withColumn("configurable_products_detail", explode(selected_col["configurable_products"]))
     df_final = df_exploded.select(
     "product_id",
@@ -65,11 +63,12 @@ def dim_configurable_product():
     df_exploded["configurable_products_detail"][3].alias("configurable_products_price"),
     df_exploded["configurable_products_detail"][4].alias("configurable_products_status")
 )
-    print(df_final.show())
-    print(df_final.count())
-    pd_df = df_exploded.toPandas()
-    pd_df.to_excel("E:/test.xlsx")
-dim_configurable_product()
+    load_dl_to_dwh(dim_configurable_product_location, dim_configurable_product_df, dim_configurable_product_name, df_final)
+    # print(df_final.show())
+    # print(df_final.count())
+    # pd_df = df_final.toPandas()
+    # pd_df.to_excel("E:/test.xlsx")
+# dim_configurable_product()
 
 def dim_inventory():
     sgg_id = 'inventory_sgg_id'
@@ -81,9 +80,6 @@ def dim_seller():
     selected_col = read_parquet_collection_products_serp("seller_id", "seller_name")
     load_dl_to_dwh(dim_seller_location, dim_seller_df, dim_seller_name, selected_col)
 # dim_seller()
-
-def dim_star():
-    pass
 
 def dim_brand():
     selected_col = read_parquet_collection_products_serp("brand_id", "brand_name")
@@ -107,6 +103,9 @@ def dim_url():
     selected_col = add_sgg_id_to_df(read_parquet_collection_products_detail("url"), sgg_id)
     load_dl_to_dwh(dim_url_location, dim_url_df, dim_url_name, selected_col)
 # dim_url()
+
+def dim_star():
+    pass
 
 def dim_time():
     pass

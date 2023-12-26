@@ -26,7 +26,7 @@ def get_products_detail():
         
         response_review = requests.get(url=url_review, headers=headers, params=params)
         review_json = response_review.json()
-
+        default_values = ["None", "None", "None", 0, "None"]
         products_detail.append({
             'product_id': products_detail_json.get('id'),
             'seller_id': products_detail_json.get('current_seller').get('id'),
@@ -50,7 +50,7 @@ def get_products_detail():
             'url': products_detail_json.get('short_url'),
             'configurable_products': ([[item['child_id'], item['name'], item['option1'], \
                 item['price'], item['inventory_status']] for item in products_detail_json.get('configurable_products')]\
-                    if products_detail_json.get('configurable_products') else []),
+                    if products_detail_json.get('configurable_products') else [default_values]),
             '1_star_count': review_json.get('stars').get('1').get('count'),
             '1_star_percent': review_json.get('stars').get('1').get('percent'),
             '2_star_count': review_json.get('stars').get('2').get('count'),
