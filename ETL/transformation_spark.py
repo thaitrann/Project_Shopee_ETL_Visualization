@@ -77,7 +77,7 @@ def dim_inventory():
 # dim_inventory()
 
 def dim_seller():
-    selected_col = read_parquet_collection_products_serp("seller_id", "seller_name")
+    selected_col = read_parquet_collection_products_detail("seller_id", "seller_name", "seller_level")
     load_dl_to_dwh(dim_seller_location, dim_seller_df, dim_seller_name, selected_col)
 # dim_seller()
 
@@ -104,11 +104,25 @@ def dim_url():
     load_dl_to_dwh(dim_url_location, dim_url_df, dim_url_name, selected_col)
 # dim_url()
 
-def dim_star():
-    pass
-
 def dim_time():
-    pass
+    selected_col_serp = read_parquet_collection_products_serp("completion_time")
+    selected_col_detail = read_parquet_collection_products_detail("completion_time")
+    time_df = selected_col_serp.union(selected_col_detail)
+
+    time_df = time_df.withColumn("date", col("completion_time").cast(DateType())) \
+    .withColumn("day_of_week", dayofweek(col("completion_time"))) \
+    .withColumn("month", month(col("completion_time"))) \
+    .withColumn("quarter", quarter(col("completion_time"))) \
+    .withColumn("year", year(col("completion_time"))) \
+    .withColumn("hour", hour(col("completion_time"))) \
+    .withColumn("minute", minute(col("completion_time"))) \
+    .withColumn("second", second(col("completion_time"))) \
+    .withColumn("time_id", concat(date_format(col("completion_time"), "yyyyMMddHHmmss")))
+    
+    selected_col = time_df.select("time_id", "date", "day_of_week", "month", "quarter", "year", "hour", "minute", "second")
+    load_dl_to_dwh(dim_time_location, dim_time_df, dim_time_name, selected_col)
+    
+dim_time()
 
 def fact_sales():
     pass
