@@ -120,13 +120,20 @@ def dim_time():
     .withColumn("time_id", concat(date_format(col("completion_time"), "yyyyMMddHHmmss")))
     
     selected_col = time_df.select("time_id", "date", "day_of_week", "month", "quarter", "year", "hour", "minute", "second")
-    load_dl_to_dwh(dim_time_location, dim_time_df, dim_time_name, selected_col)
-    
-dim_time()
+    load_dl_to_dwh(dim_time_location, dim_time_df, dim_time_name, selected_col)  
+# dim_time()
 
 def fact_sales():
-    pass
+    df_detail = spark.read.parquet("hdfs://localhost:19000/datalake/collection_products_detail")
+    dim_product = spark.read.parquet("hdfs://localhost:19000/datawarehouse/Dim_Product")
+    joined_df = df_detail.join(dim_product, "product_id")
+    test = joined_df.select("product_id", "product_name")
+    print(test.show(test.count(), truncate=False))
+    print(test.count())
+    print(test.columns)
+fact_sales()
 
 def fact_product():
     pass
 
+#add sgg_id vào datasource khi ingest
