@@ -44,12 +44,12 @@ def add_sgg_id_to_df(df, sgg_id):
 def dim_category():
     selected_col = read_parquet_collection_products_detail("category_id", "category_name")
     load_dl_to_dwh(dim_category_location, dim_category_df, dim_category_name, selected_col)
-# dim_category()
+#dim_category()
 
 def dim_product():
     selected_col = read_parquet_collection_products_serp("product_id", "product_name")
     load_dl_to_dwh(dim_product_location, dim_product_df, dim_product_name, selected_col) 
-# dim_product()
+#dim_product()
 
 def dim_configurable_product():
     selected_col = read_parquet_collection_products_detail("product_id","seller_id","configurable_products")
@@ -68,41 +68,41 @@ def dim_configurable_product():
     # print(df_final.count())
     # pd_df = df_final.toPandas()
     # pd_df.to_excel("E:/test.xlsx")
-# dim_configurable_product()
+#dim_configurable_product()
 
 def dim_inventory():
     sgg_id = 'inventory_sgg_id'
     selected_col = add_sgg_id_to_df(read_parquet_collection_products_detail("inventory_status", "inventory_type"), sgg_id)
     load_dl_to_dwh(dim_inventory_location, dim_inventory_df, dim_inventory_name, selected_col)
-# dim_inventory()
+#dim_inventory()
 
 def dim_seller():
     selected_col = read_parquet_collection_products_detail("seller_id", "seller_name", "seller_level")
     load_dl_to_dwh(dim_seller_location, dim_seller_df, dim_seller_name, selected_col)
-# dim_seller()
+#dim_seller()
 
 def dim_brand():
     selected_col = read_parquet_collection_products_serp("brand_id", "brand_name")
     load_dl_to_dwh(dim_brand_location, dim_brand_df, dim_brand_name, selected_col)
-# dim_brand()
+#dim_brand()
 
 def dim_shipping():
     sgg_id = 'shipping_sgg_id'
     selected_col = add_sgg_id_to_df(read_parquet_collection_products_serp("shipping_code","shipping_text"), sgg_id)
     load_dl_to_dwh(dim_shipping_location, dim_shipping_df, dim_shipping_name, selected_col)
-# dim_shipping()
+#dim_shipping()
 
 def dim_gift():
     sgg_id = 'gift_sgg_id'
     selected_col = add_sgg_id_to_df(read_parquet_collection_products_detail("gift_item_title"), sgg_id)
     load_dl_to_dwh(dim_gift_location, dim_gift_df, dim_gift_name, selected_col)
-# dim_gift()
+#dim_gift()
 
 def dim_url():
     sgg_id = 'url_sgg_id'
     selected_col = add_sgg_id_to_df(read_parquet_collection_products_detail("url"), sgg_id)
     load_dl_to_dwh(dim_url_location, dim_url_df, dim_url_name, selected_col)
-# dim_url()
+#dim_url()
 
 def dim_time():
     selected_col_serp = read_parquet_collection_products_serp("completion_time")
@@ -121,16 +121,18 @@ def dim_time():
     
     selected_col = time_df.select("time_id", "date", "day_of_week", "month", "quarter", "year", "hour", "minute", "second")
     load_dl_to_dwh(dim_time_location, dim_time_df, dim_time_name, selected_col)  
-# dim_time()
+#dim_time()
 
 def fact_sales():
     df_detail = spark.read.parquet("hdfs://localhost:19000/datalake/collection_products_detail")
-    dim_product = spark.read.parquet("hdfs://localhost:19000/datawarehouse/Dim_Product")
-    joined_df = df_detail.join(dim_product, "product_id")
-    test = joined_df.select("product_id", "product_name")
+    dim_inventory = spark.read.parquet("hdfs://localhost:19000/datawarehouse/Dim_Inventory")
+    
+    join_condition = (df_detail["inventory_status"] == dim_inventory["inventory_status"]) & (df_detail["inventory_type"] == dim_inventory["inventory_type"])    
+    joined_df = df_detail.join(dim_inventory, join_condition, "inner")
+    test = joined_df.select(dim_inventory["inventory_sgg_id"], df_detail["inventory_status"], df_detail["inventory_type"]).distinct()
+    print(dim_inventory.show(dim_inventory.count(), truncate=False))
     print(test.show(test.count(), truncate=False))
     print(test.count())
-    print(test.columns)
 fact_sales()
 
 def fact_product():
