@@ -124,18 +124,43 @@ def dim_time():
 #dim_time()
 
 def fact_sales():
+    df_serp = spark.read.parquet("hdfs://localhost:19000/datalake/collection_products_serp")
     df_detail = spark.read.parquet("hdfs://localhost:19000/datalake/collection_products_detail")
     dim_inventory = spark.read.parquet("hdfs://localhost:19000/datawarehouse/Dim_Inventory")
+    dim_shipping = spark.read.parquet("hdfs://localhost:19000/datawarehouse/Dim_Shipping")
+    dim_gift = spark.read.parquet("hdfs://localhost:19000/datawarehouse/Dim_Gift")
+    dim_url = spark.read.parquet("hdfs://localhost:19000/datawarehouse/Dim_Url")
     
-    join_condition = (df_detail["inventory_status"] == dim_inventory["inventory_status"]) & (df_detail["inventory_type"] == dim_inventory["inventory_type"])    
-    joined_df = df_detail.join(dim_inventory, join_condition, "inner")
-    test = joined_df.select(dim_inventory["inventory_sgg_id"], df_detail["inventory_status"], df_detail["inventory_type"]).distinct()
-    print(dim_inventory.show(dim_inventory.count(), truncate=False))
-    print(test.show(test.count(), truncate=False))
-    print(test.count())
+    join_condition_inventory = (df_detail["inventory_status"] == dim_inventory["inventory_status"]) & (df_detail["inventory_type"] == dim_inventory["inventory_type"])
+    join_condition_gift = (df_detail["gift_item_title"] == dim_gift["gift_item_title"])
+    join_condition_url = (df_detail["url"] == dim_url["url"])
+    join_condition_shipping = (df_serp["shipping_code"] == dim_shipping["shipping_code"]) & (df_serp["shipping_text"] == dim_shipping["shipping_text"])
+    
+    joined_df = df_detail.join(dim_inventory, join_condition_inventory, "inner")\
+                        .join(dim_gift, join_condition_gift, "inner")\
+                        .join(dim_url, join_condition_url, "inner")
+
+    joined_df_serp = df_serp.join(dim_shipping, join_condition_shipping, "inner")
+    
+    test2 = joined_df_serp.select(df_serp["product_id"], df_serp["seller_id"], dim_shipping["shipping_code"], dim_shipping["shipping_text"])
+    
+    test = joined_df.select(df_detail["product_id"], df_detail["seller_id"], dim_inventory["inventory_sgg_id"], \
+        df_detail["inventory_status"], df_detail["inventory_type"], dim_gift["gift_sgg_id"], dim_gift["gift_item_title"],\
+        dim_url["url_sgg_id"], df_detail["url"])
+    columns_to_drop = ["completion_time", "completion_year", "completion_month", "completion_day"]
+    test_filtered = df_detail.drop(*columns_to_drop)
+    test_distinct = test_filtered.dropDuplicates()
+    print(test_distinct.show(test_distinct.count(), truncate=False))
+    print(test_distinct.count())
+    # print(test2.show(test2.count(), truncate=False))
+    # print(test2.count())
+    # print(dim_shipping.show(dim_shipping.count(), truncate=False))
 fact_sales()
 
 def fact_product():
     pass
 
 #add sgg_id vào datasource khi ingest
+#fix duplicate dữ liệu khi ingest từ mongo vào hadoop
+#chỉnh sửa bảng dim_time thành thời gian hoàn thành (detail), thời gian hoàn thành (serp)
+
