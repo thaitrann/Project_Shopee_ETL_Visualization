@@ -49,11 +49,12 @@ def get_product_serp(url, headers, params, num_of_pages_crawl):
                     'completion_time': datetime.now()
                     })
         time.sleep(random.randrange(1, 2))
+    df_product_id = pd.DataFrame(products_id)
     #backup csv
-    pd.DataFrame(products_id).to_csv("data_backup/get_products_SERP.csv")
+    df_product_id.to_csv("data_backup/get_products_SERP.csv", index = False)
     
     #insert data to mongodb
-    collection_products_serp.insert_many(products_id)
+    collection_products_serp.insert_many(df_product_id)
     print("--- Done! {} pages ---".format(num_of_pages_crawl))
 
 get_product_serp(url, headers, params, num_of_pages_crawl)

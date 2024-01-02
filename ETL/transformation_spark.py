@@ -147,7 +147,7 @@ def fact_sales():
     test = joined_df.select(df_detail["product_id"], df_detail["seller_id"], dim_inventory["inventory_sgg_id"], \
         df_detail["inventory_status"], df_detail["inventory_type"], dim_gift["gift_sgg_id"], dim_gift["gift_item_title"],\
         dim_url["url_sgg_id"], df_detail["url"])
-    columns_to_drop = ["completion_time", "completion_year", "completion_month", "completion_day"]
+    columns_to_drop = ["completion_time", "completion_year", "completion_month", "completion_day", "_id"]
     test_filtered = df_detail.drop(*columns_to_drop)
     test_distinct = test_filtered.dropDuplicates()
     print(test_distinct.show(test_distinct.count(), truncate=False))

@@ -30,6 +30,7 @@ def get_products_detail():
         products_detail.append({
             'product_id': products_detail_json.get('id'),
             'seller_id': products_detail_json.get('current_seller').get('id'),
+            'seller_product_id': x['seller_product_id'],
             'seller_name': products_detail_json.get('current_seller').get('name'),
             'seller_level': seller_json.get('store_level'),
             'all_time_quantity_sold': products_detail_json.get('all_time_quantity_sold'),
@@ -68,7 +69,7 @@ def get_products_detail():
         time.sleep(random.randrange(1, 2))
         
     #backup csv
-    pd.DataFrame(products_detail).to_csv("data_backup/get_products_detail.csv")
+    pd.DataFrame(products_detail).to_csv("data_backup/get_products_detail.csv", index = False)
     #insert data to mongodb
     collection_products_detail.insert_many(products_detail)
     print("--- Done! ---")

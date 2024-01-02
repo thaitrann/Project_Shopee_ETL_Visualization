@@ -17,7 +17,7 @@ def create_schema_location(table_name, schema):
     dim_df = spark.read.schema(schema).parquet(location_df)
     return location_df, dim_df
         
-# create_tables(dwh_tables)
+create_tables(dwh_tables)
 
 #schema
 #Dim_Category
