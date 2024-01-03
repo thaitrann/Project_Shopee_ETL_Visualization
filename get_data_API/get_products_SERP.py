@@ -3,6 +3,7 @@ from setup import *
 
 text_search = 'mx master 3s'
 num_of_pages_crawl = 5
+
 #connect mongodb
 collection_products_serp = products_tiki["collection_products_serp"]
 
@@ -18,6 +19,26 @@ params = {
     'page': 1
 }
 start_time = time.time()
+
+def process_dictionary_list(dictionary_list):
+    unique_products = []
+
+    for dictionary in dictionary_list:
+        seller_product_id = dictionary.get('seller_product_id')
+
+        existing_dict = next((d for d in unique_products if d.get('seller_product_id') == seller_product_id), None)
+        if existing_dict:
+            if dictionary.get('completion_time') <= existing_dict.get('completion_time'):
+                unique_products.remove(existing_dict)
+                unique_products.append(dictionary)
+        else:
+            unique_products.append(dictionary)
+    
+    if len(dictionary_list) > len(unique_products):
+        print("Removed duplicate!")
+    else:
+        print("No duplicate!")
+    return unique_products
 
 def get_product_serp(url, headers, params, num_of_pages_crawl):
     products_id = []
@@ -49,14 +70,18 @@ def get_product_serp(url, headers, params, num_of_pages_crawl):
                     'completion_time': datetime.now()
                     })
         time.sleep(random.randrange(1, 2))
-    df_product_id = pd.DataFrame(products_id)
+        
+    print("--- Done! {} pages ---".format(num_of_pages_crawl))
+    
+    #remove duplicate
+    final_products_id = process_dictionary_list(products_id)
+    
     #backup csv
-    df_product_id.to_csv("data_backup/get_products_SERP.csv", index = False)
+    pd.DataFrame(final_products_id).to_csv("data_backup/get_products_SERP.csv", index = False)
     
     #insert data to mongodb
-    collection_products_serp.insert_many(df_product_id)
-    print("--- Done! {} pages ---".format(num_of_pages_crawl))
-
+    collection_products_serp.insert_many(final_products_id)
+    
 get_product_serp(url, headers, params, num_of_pages_crawl)
 
 count_documents = collection_products_serp.count_documents({})

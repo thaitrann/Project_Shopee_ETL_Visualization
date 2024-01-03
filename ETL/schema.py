@@ -1,23 +1,9 @@
 from setup import *
-
-dwh_tables = ["Dim_Category", "Dim_Product", "Dim_ConfigurableProduct","Dim_Inventory", "Dim_Seller", "Dim_Brand", "Dim_Shipping", \
-    "Dim_Gift", "Dim_Url", "Dim_Time","Fact_Sales", "Fact_Product"]
-        
-def create_tables(dwh_tables):
-    for table in dwh_tables:
-        path = "/datawarehouse/{}".format(table)
-        if not fs.exists(sc._jvm.org.apache.hadoop.fs.Path(path)):
-            fs.mkdirs(Path(path))
-            print("Table created: {}!".format(table))
-        else:
-            print("Table already exists: {}!".format(table))
             
 def create_schema_location(table_name, schema):
     location_df = 'hdfs://localhost:19000/datawarehouse/{}'.format(table_name)
     dim_df = spark.read.schema(schema).parquet(location_df)
     return location_df, dim_df
-        
-create_tables(dwh_tables)
 
 #schema
 #Dim_Category
@@ -100,9 +86,9 @@ dim_url_schema = StructType([
 dim_url_name = dwh_tables[8]
 dim_url_location, dim_url_df = create_schema_location(dim_url_name, dim_url_schema)
 
-#Dim_Time
-dim_time_schema = StructType([
-    StructField("time_id", StringType(), nullable=False),
+#Dim_Time_collect_id
+dim_time_collect_id_schema = StructType([
+    StructField("time_collect_id", StringType(), nullable=False),
     StructField("date", DateType(), nullable=False),
     StructField("day_of_week", IntegerType(), nullable=False),
     StructField("month", IntegerType(), nullable=False),
@@ -112,8 +98,23 @@ dim_time_schema = StructType([
     StructField("minute", IntegerType(), nullable=False),
     StructField("second", IntegerType(), nullable=False)
 ])
-dim_time_name = dwh_tables[9]
-dim_time_location, dim_time_df = create_schema_location(dim_time_name, dim_time_schema)
+dim_time_collect_id_name = dwh_tables[9]
+dim_time_collect_id_location, dim_time_collect_id_df = create_schema_location(dim_time_collect_id_name, dim_time_collect_id_schema)
+
+#Dim_Time_collect_detail
+dim_time_collect_detail_schema = StructType([
+    StructField("time_detail_id", StringType(), nullable=False),
+    StructField("date", DateType(), nullable=False),
+    StructField("day_of_week", IntegerType(), nullable=False),
+    StructField("month", IntegerType(), nullable=False),
+    StructField("quarter", IntegerType(), nullable=False),
+    StructField("year", IntegerType(), nullable=False),
+    StructField("hour", IntegerType(), nullable=False),
+    StructField("minute", IntegerType(), nullable=False),
+    StructField("second", IntegerType(), nullable=False)
+])
+dim_time_collect_detail_name = dwh_tables[10]
+dim_time_collect_detail_location, dim_time_collect_detail_df = create_schema_location(dim_time_collect_detail_name, dim_time_collect_detail_schema)
 
 #Fact_Sales
 fact_sales_schema = StructType([
@@ -143,7 +144,7 @@ fact_sales_schema = StructType([
     StructField("5_star_count", IntegerType()),
     StructField("5_star_percent", FloatType())
 ])
-fact_sales_name = dwh_tables[10]
+fact_sales_name = dwh_tables[11]
 fact_sales_location, fact_sales_df = create_schema_location(fact_sales_name, fact_sales_schema)
 
 #Fact_Product
@@ -163,5 +164,5 @@ fact_product_schema = StructType([
     StructField("list_price", IntegerType()),
     StructField("quantity_sold", IntegerType())
 ])
-fact_product_name = dwh_tables[11]
+fact_product_name = dwh_tables[12]
 fact_product_location, fact_product_df = create_schema_location(fact_product_name, fact_product_schema)

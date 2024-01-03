@@ -44,12 +44,10 @@ def add_sgg_id_to_df(df, sgg_id):
 def dim_category():
     selected_col = read_parquet_collection_products_detail("category_id", "category_name")
     load_dl_to_dwh(dim_category_location, dim_category_df, dim_category_name, selected_col)
-#dim_category()
 
 def dim_product():
     selected_col = read_parquet_collection_products_serp("product_id", "product_name")
     load_dl_to_dwh(dim_product_location, dim_product_df, dim_product_name, selected_col) 
-#dim_product()
 
 def dim_configurable_product():
     selected_col = read_parquet_collection_products_detail("product_id","seller_id","configurable_products")
@@ -68,46 +66,37 @@ def dim_configurable_product():
     # print(df_final.count())
     # pd_df = df_final.toPandas()
     # pd_df.to_excel("E:/test.xlsx")
-#dim_configurable_product()
 
 def dim_inventory():
     sgg_id = 'inventory_sgg_id'
     selected_col = add_sgg_id_to_df(read_parquet_collection_products_detail("inventory_status", "inventory_type"), sgg_id)
     load_dl_to_dwh(dim_inventory_location, dim_inventory_df, dim_inventory_name, selected_col)
-#dim_inventory()
 
 def dim_seller():
     selected_col = read_parquet_collection_products_detail("seller_id", "seller_name", "seller_level")
     load_dl_to_dwh(dim_seller_location, dim_seller_df, dim_seller_name, selected_col)
-#dim_seller()
 
 def dim_brand():
     selected_col = read_parquet_collection_products_serp("brand_id", "brand_name")
     load_dl_to_dwh(dim_brand_location, dim_brand_df, dim_brand_name, selected_col)
-#dim_brand()
 
 def dim_shipping():
     sgg_id = 'shipping_sgg_id'
     selected_col = add_sgg_id_to_df(read_parquet_collection_products_serp("shipping_code","shipping_text"), sgg_id)
     load_dl_to_dwh(dim_shipping_location, dim_shipping_df, dim_shipping_name, selected_col)
-#dim_shipping()
 
 def dim_gift():
     sgg_id = 'gift_sgg_id'
     selected_col = add_sgg_id_to_df(read_parquet_collection_products_detail("gift_item_title"), sgg_id)
     load_dl_to_dwh(dim_gift_location, dim_gift_df, dim_gift_name, selected_col)
-#dim_gift()
 
 def dim_url():
     sgg_id = 'url_sgg_id'
     selected_col = add_sgg_id_to_df(read_parquet_collection_products_detail("url"), sgg_id)
     load_dl_to_dwh(dim_url_location, dim_url_df, dim_url_name, selected_col)
-#dim_url()
 
-def dim_time():
-    selected_col_serp = read_parquet_collection_products_serp("completion_time")
-    selected_col_detail = read_parquet_collection_products_detail("completion_time")
-    time_df = selected_col_serp.union(selected_col_detail)
+def dim_time_collect_id():
+    time_df = read_parquet_collection_products_serp("completion_time")
 
     time_df = time_df.withColumn("date", col("completion_time").cast(DateType())) \
     .withColumn("day_of_week", dayofweek(col("completion_time"))) \
@@ -117,11 +106,26 @@ def dim_time():
     .withColumn("hour", hour(col("completion_time"))) \
     .withColumn("minute", minute(col("completion_time"))) \
     .withColumn("second", second(col("completion_time"))) \
-    .withColumn("time_id", concat(date_format(col("completion_time"), "yyyyMMddHHmmss")))
+    .withColumn("time_collect_id", concat(date_format(col("completion_time"), "yyyyMMddHHmmss")))
     
-    selected_col = time_df.select("time_id", "date", "day_of_week", "month", "quarter", "year", "hour", "minute", "second")
-    load_dl_to_dwh(dim_time_location, dim_time_df, dim_time_name, selected_col)  
-#dim_time()
+    selected_col = time_df.select("time_collect_id", "date", "day_of_week", "month", "quarter", "year", "hour", "minute", "second")
+    load_dl_to_dwh(dim_time_collect_id_location, dim_time_collect_id_df, dim_time_collect_id_name, selected_col)  
+    
+def dim_time_collect_detail():
+    time_df = read_parquet_collection_products_detail("completion_time")
+
+    time_df = time_df.withColumn("date", col("completion_time").cast(DateType())) \
+    .withColumn("day_of_week", dayofweek(col("completion_time"))) \
+    .withColumn("month", month(col("completion_time"))) \
+    .withColumn("quarter", quarter(col("completion_time"))) \
+    .withColumn("year", year(col("completion_time"))) \
+    .withColumn("hour", hour(col("completion_time"))) \
+    .withColumn("minute", minute(col("completion_time"))) \
+    .withColumn("second", second(col("completion_time"))) \
+    .withColumn("time_detail_id", concat(date_format(col("completion_time"), "yyyyMMddHHmmss")))
+    
+    selected_col = time_df.select("time_detail_id", "date", "day_of_week", "month", "quarter", "year", "hour", "minute", "second")
+    load_dl_to_dwh(dim_time_collect_detail_location, dim_time_collect_detail_df, dim_time_collect_detail_name, selected_col)  
 
 def fact_sales():
     df_serp = spark.read.parquet("hdfs://localhost:19000/datalake/collection_products_serp")
@@ -142,25 +146,30 @@ def fact_sales():
 
     joined_df_serp = df_serp.join(dim_shipping, join_condition_shipping, "inner")
     
-    test2 = joined_df_serp.select(df_serp["product_id"], df_serp["seller_id"], dim_shipping["shipping_code"], dim_shipping["shipping_text"])
+    test2 = joined_df_serp.select(df_serp["product_id"], df_serp["seller_id"], dim_shipping["shipping_code"], dim_shipping["shipping_text"], dim_shipping["shipping_sgg_id"])
     
     test = joined_df.select(df_detail["product_id"], df_detail["seller_id"], dim_inventory["inventory_sgg_id"], \
         df_detail["inventory_status"], df_detail["inventory_type"], dim_gift["gift_sgg_id"], dim_gift["gift_item_title"],\
         dim_url["url_sgg_id"], df_detail["url"])
-    columns_to_drop = ["completion_time", "completion_year", "completion_month", "completion_day", "_id"]
-    test_filtered = df_detail.drop(*columns_to_drop)
-    test_distinct = test_filtered.dropDuplicates()
-    print(test_distinct.show(test_distinct.count(), truncate=False))
-    print(test_distinct.count())
-    # print(test2.show(test2.count(), truncate=False))
-    # print(test2.count())
-    # print(dim_shipping.show(dim_shipping.count(), truncate=False))
-fact_sales()
+    
+    print(test2.show(test2.count(), truncate=False))
+    print(test2.count())
 
 def fact_product():
     pass
 
-#add sgg_id vào datasource khi ingest
-#fix duplicate dữ liệu khi ingest từ mongo vào hadoop
-#chỉnh sửa bảng dim_time thành thời gian hoàn thành (detail), thời gian hoàn thành (serp)
+dim_category()
+dim_product()
+dim_configurable_product()
+dim_inventory()
+dim_seller()
+dim_brand()
+dim_shipping()
+dim_gift()
+dim_url()
+dim_time_collect_id()
+dim_time_collect_detail()
+# fact_sales()
+
+#fix data time đang sai
 
