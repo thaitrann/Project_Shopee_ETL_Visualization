@@ -31,3 +31,5 @@ fs = FileSystem.get(URI("hdfs://localhost:19000"), Configuration())
 
 dwh_tables = ["Dim_Category", "Dim_Product", "Dim_ConfigurableProduct","Dim_Inventory", "Dim_Seller", "Dim_Brand", "Dim_Shipping", \
     "Dim_Gift", "Dim_Url", "Dim_Time_collect_id", "Dim_Time_collect_detail", "Fact_Sales", "Fact_Product"]
+
+collections = ['collection_products_serp', 'collection_products_detail']

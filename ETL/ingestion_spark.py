@@ -1,7 +1,6 @@
 #INGEST RAW DATA FROM MONGODB TO HDFS DATALAKE
 from setup import *
 
-collections = ['collection_products_serp', 'collection_products_detail']
 def Ingestion(collections):
     for collection in collections:
         uri = "mongodb://localhost:27017/products_tiki.{}".format(collection)
