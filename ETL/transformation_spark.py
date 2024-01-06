@@ -160,17 +160,17 @@ def fact_sales():
 def fact_product():
     pass
 
-# dim_category()
-# dim_product()
-# dim_configurable_product()
-# dim_inventory()
-# dim_seller()
-# dim_brand()
-# dim_shipping()
-# dim_gift()
-# dim_url()
+dim_category()
+dim_product()
+dim_configurable_product()
+dim_inventory()
+dim_seller()
+dim_brand()
+dim_shipping()
+dim_gift()
+dim_url()
 dim_time_collect_id()
-# dim_time_collect_detail()
+dim_time_collect_detail()
 # fact_sales()
 
 

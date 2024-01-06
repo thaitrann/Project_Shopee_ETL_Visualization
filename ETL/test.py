@@ -1,22 +1,21 @@
 from setup import *
 
-uri = "mongodb://localhost:27017/products_tiki.collection_products_serp"
-df = spark.read.format("mongo").option("uri", uri).load()
-# df = spark.read.parquet("hdfs://localhost:19000/datalake/collection_products_serp")
-# df = df.withColumn("completion_time", to_date(df["completion_time"], "yyyy-MM-dd HH:mm:ss.SSSSSS"))
-max_date_df_datalake = datetime.datetime.fromtimestamp(0)
-df = df.filter(df["completion_time"] > max_date_df_datalake)
+def delete_data(dwh_tables):
+    for i in dwh_tables:
+        path = "/datawarehouse/{}".format(i)
+        status = fs.listStatus(Path(path))
+        print(status)
+        # for fileStatus in status:
+        #     sub_file_path = fileStatus.getPath()
+        #     print(sub_file_path)
+            # if sub_file_path:
+            #     fs.delete(sub_file_path)
+            #     print("Deleted Data!")
 
-selected_col = df.select("completion_time")
-output_df = selected_col.\
-    withColumn("completion_year", date_format(col("completion_time"), "Y")).\
-    withColumn("completion_month", date_format(col("completion_time"), "M")).\
-    withColumn("completion_day", date_format(col("completion_time"), "d")).\
-    withColumn("completion_hour", date_format(col("completion_time"), "H")).\
-    withColumn("completion_minute", date_format(col("completion_time"), "m")).\
-    withColumn("completion_second", date_format(col("completion_time"), "s"))
+            # else:
+            #     print("No Data!")
+
+delete_data(dwh_tables)
+
+
     
-print(output_df.show(output_df.count(), truncate=False))
-
-print(output_df.count())
-
