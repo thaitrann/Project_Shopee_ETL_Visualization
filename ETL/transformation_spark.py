@@ -97,18 +97,19 @@ def dim_url():
 
 def dim_time_collect_id():
     time_df = read_parquet_collection_products_serp("completion_time")
-
+    
     time_df = time_df.withColumn("date", col("completion_time").cast(DateType())) \
     .withColumn("day_of_week", dayofweek(col("completion_time"))) \
-    .withColumn("month", month(col("completion_time"))) \
     .withColumn("quarter", quarter(col("completion_time"))) \
+    .withColumn("day", dayofmonth(col("completion_time"))) \
+    .withColumn("month", month(col("completion_time"))) \
     .withColumn("year", year(col("completion_time"))) \
     .withColumn("hour", hour(col("completion_time"))) \
     .withColumn("minute", minute(col("completion_time"))) \
     .withColumn("second", second(col("completion_time"))) \
     .withColumn("time_collect_id", concat(date_format(col("completion_time"), "yyyyMMddHHmmss")))
     
-    selected_col = time_df.select("time_collect_id", "date", "day_of_week", "month", "quarter", "year", "hour", "minute", "second")
+    selected_col = time_df.select("time_collect_id", "date", "day_of_week", "quarter", "day", "month", "year", "hour", "minute", "second")
     load_dl_to_dwh(dim_time_collect_id_location, dim_time_collect_id_df, dim_time_collect_id_name, selected_col)  
     
 def dim_time_collect_detail():
@@ -116,15 +117,16 @@ def dim_time_collect_detail():
 
     time_df = time_df.withColumn("date", col("completion_time").cast(DateType())) \
     .withColumn("day_of_week", dayofweek(col("completion_time"))) \
-    .withColumn("month", month(col("completion_time"))) \
     .withColumn("quarter", quarter(col("completion_time"))) \
+    .withColumn("day", dayofmonth(col("completion_time"))) \
+    .withColumn("month", month(col("completion_time"))) \
     .withColumn("year", year(col("completion_time"))) \
     .withColumn("hour", hour(col("completion_time"))) \
     .withColumn("minute", minute(col("completion_time"))) \
     .withColumn("second", second(col("completion_time"))) \
-    .withColumn("time_detail_id", concat(date_format(col("completion_time"), "yyyyMMddHHmmss")))
+    .withColumn("time_collect_id", concat(date_format(col("completion_time"), "yyyyMMddHHmmss")))
     
-    selected_col = time_df.select("time_detail_id", "date", "day_of_week", "month", "quarter", "year", "hour", "minute", "second")
+    selected_col = time_df.select("time_collect_id", "date", "day_of_week", "quarter", "day", "month", "year", "hour", "minute", "second")
     load_dl_to_dwh(dim_time_collect_detail_location, dim_time_collect_detail_df, dim_time_collect_detail_name, selected_col)  
 
 def fact_sales():
@@ -158,18 +160,18 @@ def fact_sales():
 def fact_product():
     pass
 
-dim_category()
-dim_product()
-dim_configurable_product()
-dim_inventory()
-dim_seller()
-dim_brand()
-dim_shipping()
-dim_gift()
-dim_url()
+# dim_category()
+# dim_product()
+# dim_configurable_product()
+# dim_inventory()
+# dim_seller()
+# dim_brand()
+# dim_shipping()
+# dim_gift()
+# dim_url()
 dim_time_collect_id()
-dim_time_collect_detail()
+# dim_time_collect_detail()
 # fact_sales()
 
-#fix data time đang sai
+
 

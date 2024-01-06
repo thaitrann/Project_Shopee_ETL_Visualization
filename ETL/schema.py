@@ -91,8 +91,9 @@ dim_time_collect_id_schema = StructType([
     StructField("time_collect_id", StringType(), nullable=False),
     StructField("date", DateType(), nullable=False),
     StructField("day_of_week", IntegerType(), nullable=False),
-    StructField("month", IntegerType(), nullable=False),
     StructField("quarter", IntegerType(), nullable=False),
+    StructField("day", IntegerType(), nullable=False),
+    StructField("month", IntegerType(), nullable=False),
     StructField("year", IntegerType(), nullable=False),
     StructField("hour", IntegerType(), nullable=False),
     StructField("minute", IntegerType(), nullable=False),
@@ -103,11 +104,12 @@ dim_time_collect_id_location, dim_time_collect_id_df = create_schema_location(di
 
 #Dim_Time_collect_detail
 dim_time_collect_detail_schema = StructType([
-    StructField("time_detail_id", StringType(), nullable=False),
+    StructField("time_collect_id", StringType(), nullable=False),
     StructField("date", DateType(), nullable=False),
     StructField("day_of_week", IntegerType(), nullable=False),
-    StructField("month", IntegerType(), nullable=False),
     StructField("quarter", IntegerType(), nullable=False),
+    StructField("day", IntegerType(), nullable=False),
+    StructField("month", IntegerType(), nullable=False),
     StructField("year", IntegerType(), nullable=False),
     StructField("hour", IntegerType(), nullable=False),
     StructField("minute", IntegerType(), nullable=False),

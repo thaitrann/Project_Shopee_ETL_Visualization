@@ -67,7 +67,7 @@ def get_product_serp(url, headers, params, num_of_pages_crawl):
                     'shipping_code': next(item for item in record.get('badges_new') if item["placement"] == "delivery_info")['code'],
                     'shipping_text': next(item for item in record.get('badges_new') if item["placement"] == "delivery_info")['text'],
                     'page': i,
-                    'completion_time': datetime.now()
+                    'completion_time': str(datetime.now())
                     })
         time.sleep(random.randrange(1, 2))
         
